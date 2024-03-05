@@ -11,9 +11,6 @@
     in {
       packages.angular-language-server =
         pkgs.callPackage ./angular-language-server { inherit nodejs; };
-      packages.vscode-langservers-extracted =
-        pkgs.callPackage ./vscode-langservers-extracted { };
-
       devShells.${system}.default =
         pkgs.mkShell { buildInputs = with pkgs; [ nodejs-18_x yarn ]; };
     };
