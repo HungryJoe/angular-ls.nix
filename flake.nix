@@ -1,27 +1,22 @@
 {
   description = "Various Language Servers (lsp).";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
-  };
+  inputs = { nixpkgs.url = "github:nixos/nixpkgs"; };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-        nodejs = pkgs.nodejs-18_x;
-      in {
-        packages.angular-language-server =
-          pkgs.callPackage ./angular-language-server { inherit nodejs; };
-        packages.jdt-language-server =
-          pkgs.callPackage ./jdt-language-server { };
-        packages.svelte-language-server =
-          pkgs.callPackage ./svelte-language-server { };
-        packages.vscode-langservers-extracted =
-          pkgs.callPackage ./vscode-langservers-extracted { };
+  outputs = { self, nixpkgs }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      nodejs = pkgs.nodejs-18_x;
+    in {
+      packages.angular-language-server =
+        pkgs.callPackage ./angular-language-server { inherit nodejs; };
+      packages.svelte-language-server =
+        pkgs.callPackage ./svelte-language-server { };
+      packages.vscode-langservers-extracted =
+        pkgs.callPackage ./vscode-langservers-extracted { };
 
-        devShell =
-          pkgs.mkShell { buildInputs = with pkgs; [ nodejs-18_x yarn ]; };
-      });
+      devShells.${system}.default =
+        pkgs.mkShell { buildInputs = with pkgs; [ nodejs-18_x yarn ]; };
+    };
 }

@@ -42,15 +42,6 @@ It provides `bin/svelte-language-server` from [svelte-language-server](https://g
 The currently used packages are visible through [svelte-language-server/package.json](./svelte-language-server/package.json).
 
 
-## JDT Language Server
-
-It provides `bin/jdtls` and `libexec/jdt-language-server/*` from [Eclipse JDT Language Server](https://github.com/eclipse/eclipse.jdt.ls) which can be consumed in editors like Emacs or Vim. It is based on the binary distribution because building the server from source is non trivial (Maven with Tycho plugin).
-
-`bin/jdtls` is a wrapper script, which invokes `libexec/jdt-language-server/bin/jdtls`, prefixed with Pyhton added to the `PATH`. Java needs to be in the path to make it work.
-
-The current version is transparent via [jdt-language-server/default.nix](jdt-language-server/default.nix).
-
-
 ## How to use this?
 
 Include the flake into your flake which defines the dev shell, e.g.:
@@ -61,25 +52,23 @@ Include the flake into your flake which defines the dev shell, e.g.:
     nixpkgs.url = github:nixos/nixpkgs;
     language-servers.url = git+https://git.sr.ht/~bwolf/language-servers.nix;
     language-servers.inputs.nixpkgs.follows = "nixpkgs";
-    flake-utils.url = github:numtide/flake-utils;
   };
 
-  outputs = { self, nixpkgs, language-servers, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in {
-        devShell = pkgs.mkShell {
-          packages = with pkgs; [
-            nodejs-18_x
-            language-servers.packages.${system}.angular-language-server
-            language-servers.packages.${system}.typescript-language-server
-            language-servers.packages.${system}.vscode-langservers-extracted
-            language-servers.packages.${system}.svelte-language-server
-            language-servers.packages.${system}.jdt-language-server
-          ];
-        };
-      });
+  outputs = { self, nixpkgs, language-servers }:
+    let
+	    system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      devShells.${system}.default = pkgs.mkShell {
+        packages = with pkgs; [
+          nodejs-18_x
+          language-servers.packages.${system}.angular-language-server
+          language-servers.packages.${system}.typescript-language-server
+          language-servers.packages.${system}.vscode-langservers-extracted
+          language-servers.packages.${system}.svelte-language-server
+        ];
+      };
+    };
 }
 ```
 
