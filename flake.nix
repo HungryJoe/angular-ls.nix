@@ -11,8 +11,6 @@
     in {
       packages.angular-language-server =
         pkgs.callPackage ./angular-language-server { inherit nodejs; };
-      packages.svelte-language-server =
-        pkgs.callPackage ./svelte-language-server { };
       packages.vscode-langservers-extracted =
         pkgs.callPackage ./vscode-langservers-extracted { };
 

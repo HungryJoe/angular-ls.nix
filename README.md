@@ -3,13 +3,13 @@
 - [Introduction](#introduction)
 - [Angular Language Server](#angular-language-server)
 - [Extracted VSCcode Language Servers](#extracted-vscode-language-servers)
-- [Svelte Language Server](#svelte-language-server)
-- [JDT Language Server](#jdk-language-server)
 
 
 ## Introduction
 
 A Nix flake providing various language servers. It allows easy integration into existing development shells (without polluting e.g. `package.json/devDependencies` which probably other developers aren't intersted in if the use a different tooling, i.e. not Nix).
+
+**NOTE**: Language server come and go, as more of them are added to nixpkgs.
 
 
 ## Angular Language Server
@@ -35,13 +35,6 @@ Included are currently:
 - vscode-json-language-server
 
 
-## Svelte Language Server
-
-It provides `bin/svelte-language-server` from [svelte-language-server](https://github.com/sveltejs/language-tools) which expects `node` in `$PATH`.
-
-The currently used packages are visible through [svelte-language-server/package.json](./svelte-language-server/package.json).
-
-
 ## How to use this?
 
 Include the flake into your flake which defines the dev shell, e.g.:
@@ -65,7 +58,6 @@ Include the flake into your flake which defines the dev shell, e.g.:
           language-servers.packages.${system}.angular-language-server
           language-servers.packages.${system}.typescript-language-server
           language-servers.packages.${system}.vscode-langservers-extracted
-          language-servers.packages.${system}.svelte-language-server
         ];
       };
     };
