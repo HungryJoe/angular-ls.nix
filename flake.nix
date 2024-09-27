@@ -1,17 +1,20 @@
 {
-  description = "Various Language Servers (lsp).";
+  description = "The Angular Language server (lsp).";
 
-  inputs = { nixpkgs.url = "github:nixos/nixpkgs"; };
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+  };
 
-  outputs = { self, nixpkgs }:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      nodejs = pkgs.nodejs-18_x;
-    in {
-      packages.angular-language-server =
-        pkgs.callPackage ./angular-language-server { inherit nodejs; };
-      devShells.${system}.default =
-        pkgs.mkShell { buildInputs = with pkgs; [ nodejs-18_x yarn ]; };
+  outputs = inputs@{flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
+      perSystem = {config, pkgs, ...}: {
+          packages.angular-language-server =
+            pkgs.callPackage ./angular-language-server { nodejs=pkgs.nodejs-18_x; };
+          devShells.default =
+            pkgs.mkShell { buildInputs = with pkgs; [ nodejs-18_x yarn ]; };
+      
+      };
     };
 }
