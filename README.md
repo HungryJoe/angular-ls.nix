@@ -1,5 +1,7 @@
 # language-servers.nix
 
+**NOTE**: This repository is forked from [this sourcehut repo](https://git.sr.ht/~bwolf/language-servers.nix).
+
 - [Introduction](#introduction)
 - [Angular Language Server](#angular-language-server)
 
